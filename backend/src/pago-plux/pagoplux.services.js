@@ -15,25 +15,11 @@ class PagoPluxServices {
     return user;
   }
 
-  static async getTransactions(
-    numeroIdentificacion,
-    initialDate,
-    finalDate,
-    tipoPago,
-    estado,
-    identificacionCliente
-  ) {
+  static async getTransactions(requestBody) {
     try {
-      const response = await axios.post(
-        "https://api.pagoplux.com/intv1/integrations/getTransactionsEstablishmentResource",
-        {
-          numeroIdentificacion,
-          initialDate,
-          finalDate,
-          tipoPago,
-          estado,
-          identificacionCliente,
-        },
+      const { data } = await axios.post(
+        "https://apipre.pagoplux.com/intv1/integrations/getTransactionsEstablishmentResource",
+        requestBody,
         {
           headers: {
             "Content-Type": "application/json",
@@ -43,10 +29,9 @@ class PagoPluxServices {
           },
         }
       );
-
-      return response.data;
+      return data;
     } catch (error) {
-      throw error;
+      throw new Error("Error fetching transactions: " + error.message);
     }
   }
 }

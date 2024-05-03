@@ -22,17 +22,16 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors(Validation(values));
-    if (errors.email === "" && errors.password === "") {
+    if (!errors.email && !errors.password) {
       axios
         .post("http://localhost:8081/api/v1/login", values)
         .then((res) => {
+          console.log(res.data);
           if (res.data.message === "Login successful") {
-            navigate("/home");
-          } else {
-            alert("El usuario no existe!");
+            window.location.replace("/home");
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => alert("El usuario no existe!"));
     }
   };
   return (

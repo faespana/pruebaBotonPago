@@ -41,24 +41,34 @@ const createLogin = async (req, res) => {
 };
 
 const getTransactions = async (req, res) => {
-  try {
-    const { initialDate, finalDate, tipoPago, estado, identificacionCliente } =
-      req.query;
-    console.log(req.query);
-    const numeroIdentificacion = "0992664673001";
-    const transactions = await PagoPluxServices.getTransactions(
-      numeroIdentificacion,
-      initialDate,
-      finalDate,
-      tipoPago,
-      estado,
-      identificacionCliente
-    );
+  const {
+    numeroIdentificacion,
+    initialDate,
+    finalDate,
+    tipoPago,
+    estado,
+    identificacionCliente,
+  } = req.body;
 
-    res.status(200).json(transactions);
+  const requestBody = {
+    numeroIdentificacion,
+    initialDate,
+    finalDate,
+    tipoPago,
+    estado,
+    identificacionCliente,
+  };
+
+  try {
+    const transactions = await PagoPluxServices.getTransactions(requestBody);
+    return res.status(200).json({
+      message: "Transactions retrieved successfully",
+      transactions,
+    });
   } catch (error) {
-    res.status(500).json({
-      error: "Error al obtener las transacciones del establecimiento",
+    return res.status(500).json({
+      message: "Error retrieving transactions",
+      error: error.message,
     });
   }
 };
